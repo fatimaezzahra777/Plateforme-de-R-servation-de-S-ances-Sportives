@@ -14,15 +14,98 @@ let selectedRole = 'athlete';
 
         function selectRole(role) {
             selectedRole = role;
-            document.getElementById('athleteBtn').classList.remove('bg-blue-50', 'border-blue-600', 'text-blue-600');
-            document.getElementById('coachBtn').classList.remove('bg-blue-50', 'border-blue-600', 'text-blue-600');
+            document.getElementById("role").value = role;
 
-            if (role === 'athlete') {
-                document.getElementById('athleteBtn').classList.add('bg-blue-50', 'border-blue-600', 'text-blue-600');
+            const athleteBtn = document.getElementById('athleteBtn');
+            const coachBtn = document.getElementById('coachBtn');
+            const niveau = document.getElementById("niveau");
+            
+            const coachFields = document.getElementById('coachFields');
+
+            // reset styles
+            athleteBtn.classList.remove('bg-blue-50', 'border-blue-600', 'text-blue-600');
+            coachBtn.classList.remove('bg-blue-50', 'border-blue-600', 'text-blue-600');
+
+            athleteBtn.classList.add('border-gray-300', 'text-gray-600');
+            coachBtn.classList.add('border-gray-300', 'text-gray-600');
+
+            if (role === 'sportif') {
+                athleteBtn.classList.remove('border-gray-300', 'text-gray-600');
+                athleteBtn.classList.add('bg-blue-50', 'border-blue-600', 'text-blue-600');
+                niveau.style.display = "block";
+                niveau.required = true;
+                coachFields.classList.add('hidden');
             } else {
-                document.getElementById('coachBtn').classList.add('bg-blue-50', 'border-blue-600', 'text-blue-600');
+                coachBtn.classList.remove('border-gray-300', 'text-gray-600');
+                coachBtn.classList.add('bg-blue-50', 'border-blue-600', 'text-blue-600');
+                niveau.style.display = "none";
+                niveau.required = false;
+                niveau.value = "";
+                coachFields.classList.remove('hidden');
             }
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            selectRole('sportif');
+        });
+       
+        function validateForm() {
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            
+            const phoneRegex = /^(\+212|0)[67][0-9]{8}$/;
+
+          
+            const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+          
+            if (!emailRegex.test(email)) {
+                Swal.fire('Erreur', 'Email invalide', 'error');
+                return false;
+            }
+
+            if (!phoneRegex.test(phone)) {
+                Swal.fire('Erreur', 'Téléphone invalide (ex: +2126XXXXXXXX)', 'error');
+                return false;
+            }
+
+            if (!passwordRegex.test(password)) {
+                Swal.fire('Erreur', 'Le mot de passe doit avoir au moins 8 caractères, 1 majuscule et 1 chiffre', 'error');
+                return false;
+            }
+
+            if (password !== confirmPassword) {
+                Swal.fire('Erreur', 'Les mots de passe ne correspondent pas', 'error');
+                return false;
+            }
+
+            return true;
+        }
+
+      
+        function handleRegister(event) {
+            event.preventDefault();
+
+            if (!validateForm()) return;
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Compte créé',
+                text: 'Votre compte a été créé avec succès',
+                confirmButtonColor: '#2563eb'
+            }).then(() => {
+                // Ici tu peux envoyer le formulaire si PHP est prêt
+                // document.getElementById('registerForm').submit();
+            });
+        }
+
+
 
         function handleLogin(e) {
             e.preventDefault();

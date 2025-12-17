@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,6 +22,7 @@
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="index.php">Accueil</a>
                     <a href="coach.php">Coachs</a>
+                    <a href="sportif.php">Sportifs</a>
                     <a href="login.php">Connexion</a>
                     <a href="inscri.php">Inscription</a>
 
@@ -37,6 +38,7 @@
             <div id="mobileMenu" class="hidden md:hidden pb-4 space-y-2">
                 <a href="index.php">Accueil</a>
                 <a href="coach.php">Coachs</a>
+                <a href="sportif.php">Sportifs</a>
                 <a href="login.php">Connexion</a>
                 <a href="inscri.php">Inscription</a>
 

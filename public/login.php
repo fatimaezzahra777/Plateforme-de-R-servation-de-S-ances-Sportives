@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="../assets/css/index.css" rel="stylesheet">
+  
 </head>
 <body class="bg-gray-50">
      <nav class="bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg sticky top-0 z-50">
@@ -22,6 +22,7 @@
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="index.php">Accueil</a>
                     <a href="coach.php">Coachs</a>
+                    <a href="sportif.php">Sportifs</a>
                     <a href="login.php">Connexion</a>
                     <a href="inscri.php">Inscription</a>
 
@@ -37,6 +38,7 @@
             <div id="mobileMenu" class="hidden md:hidden pb-4 space-y-2">
                 <a href="index.php">Accueil</a>
                 <a href="coach.php">Coachs</a>
+                <a href="sportif.php">Sportifs</a>
                 <a href="login.php">Connexion</a>
                 <a href="inscri.php">Inscription</a>
 
@@ -96,11 +98,14 @@
                 <div class="mt-6 text-center">
                     <p class="text-gray-600">
                         Pas encore de compte? 
-                        <a href="#" onclick="showPage('register')" class="text-blue-600 hover:underline ml-1 font-medium">S'inscrire</a>
+                        <a href="inscri.php" onclick="showPage('register')" class="text-blue-600 hover:underline ml-1 font-medium">S'inscrire</a>
                     </p>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- JS -->
+<script src="./assets/js/index.js"></script>
 </body>
 </html>
