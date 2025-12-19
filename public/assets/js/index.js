@@ -31,13 +31,13 @@ let selectedRole = 'athlete';
 
             if (role === 'sportif') {
                 athleteBtn.classList.remove('border-gray-300', 'text-gray-600');
-                athleteBtn.classList.add('bg-blue-50', 'border-blue-600', 'text-blue-600');
+                athleteBtn.classList.add('bg-white/10', 'border-emerald-400', 'text-emerald-400');
                 niveau.style.display = "block";
                 niveau.required = true;
                 coachFields.classList.add('hidden');
             } else {
                 coachBtn.classList.remove('border-gray-300', 'text-gray-600');
-                coachBtn.classList.add('bg-blue-50', 'border-blue-600', 'text-blue-600');
+                coachBtn.classList.add('bg-white/10', 'border-emerald-400', 'text-emerald-400');
                 niveau.style.display = "none";
                 niveau.required = false;
                 niveau.value = "";

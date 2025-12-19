@@ -4,40 +4,60 @@
     <meta charset="UTF-8">
     <title>Conditions d'utilisation - SportCoach</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- CSS -->
     <link rel="stylesheet" href="./assets/css/index.css">
 </head>
 
-<body class="bg-gray-100 text-gray-800">
+<body class="relative min-h-screen bg-black overflow-x-hidden text-white">
+        <div class="absolute inset-0 -z-10">
+            <div class="absolute -left-40 top-1/2 w-[700px] h-[700px]
+                        bg-gradient-to-r from-blue-500 to-green-500
+                        opacity-30 rounded-full blur-3xl"></div>
 
-<!-- NAVBAR -->
-<nav class="bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg">
-    <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
-        <div class="flex items-center space-x-2">
-            <i class="fas fa-dumbbell text-2xl"></i>
-            <span class="text-xl font-bold">SportCoach</span>
+            <div class="absolute -right-40 top-1/3 w-[700px] h-[700px]
+                    bg-gradient-to-r from-green-500 to-blue-500
+                    opacity-30 rounded-full blur-3xl"></div>
+       </div>
+
+        <nav class="bg-white/10 backdrop-blur-xl border-b border-white/20
+            text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+
+                <div class="flex items-center space-x-2 cursor-pointer">
+                    <i class="fas fa-dumbbell text-3xl text-emerald-400"></i>
+                    <span class="text-2xl font-bold">SportCoach</span>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8 font-medium">
+                    <a href="index.php" class="hover:text-emerald-400 transition">Accueil</a>
+                    <a href="coach.php" class="hover:text-emerald-400 transition">Coachs</a>
+                    <a href="sportif.php" class="hover:text-emerald-400 transition">Sportifs</a>
+                    <a href="login.php" class="text-emerald-400 font-bold">Connexion</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="hidden md:hidden pb-4 space-y-2">
+                <a href="index.php" class="block hover:text-emerald-400">Accueil</a>
+                <a href="coach.php" class="block hover:text-emerald-400">Coachs</a>
+                <a href="sportif.php" class="block hover:text-emerald-400">Sportifs</a>
+                <a href="login.php" class="block text-emerald-400 font-bold">Connexion</a>
+            </div>
         </div>
-        <div class="hidden md:flex space-x-6">
-            <a href="index.php">Accueil</a>
-            <a href="coach.php">Coachs</a>
-            <a href="sportif.php">Sportifs</a>
-            <a href="login.php">Connexion</a>
-            <a href="inscri.php">Inscription</a>
-        </div>
-    </div>
-</nav>
+    </nav>
 
 <!-- CONTENU -->
-<div class="max-w-4xl mx-auto px-4 py-12 bg-white shadow-lg rounded-xl mt-8 mb-12">
+<div class="max-w-4xl mx-auto px-4 py-12 bg-emerald shadow-lg rounded-xl mt-8 mb-12">
 
-    <h1 class="text-3xl font-bold mb-6 text-blue-700">
+    <h1 class="text-3xl font-bold mb-6 text-emerald-400">
         Conditions Générales d’Utilisation
     </h1>
 
@@ -104,11 +124,6 @@
     </div>
 
 </div>
-
-<!-- FOOTER -->
-<footer class="bg-gray-800 text-gray-300 py-6 text-center">
-    <p>&copy; <?= date('Y') ?> SportCoach – Tous droits réservés</p>
-</footer>
 
 </body>
 </html>

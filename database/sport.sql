@@ -5,4 +5,45 @@ create database Sports;
 show databases;
 
 --Travaille sur cette database
-use salle_sport;
+use Sports;
+
+--create table users
+CREATE TABLE users (
+    id_user INT AUTO_INCREMENT PRIMARY KEY,
+    nom varchar(50) NOT NULL,
+    email varchar(250) UNIQUE NOT NULL,
+    telephone varchar(20) NOT NULL,
+    password varchar(255) NOT NULL,
+    role enum('sportif','coach')
+);
+
+--create table coach
+CREATE TABLE coach (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_user int ,
+    experience int NOT NULL,
+    biographie text NOT NULL,
+    photo varchar(255) NOT NULL,
+    FOREIGN KEY (id_user) REFERENCES users(id_user),
+);
+
+--create table sportif
+CREATE TABLE sportif (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_user int ,
+    niveau varchar(50),
+    FOREIGN KEY (id_user) REFERENCES users(id_user)
+);
+
+--create table reserrvation
+CREATE TABLE reservation (
+    id_reserv INT AUTO_INCREMENT PRIMARY KEY,
+    id_coach INT,
+    id_sportif INT,
+    date_r DATE,
+    heure TIME,
+    statut ENUM('acceptée','refusée'),
+    FOREIGN KEY (id_coach) REFERENCES coach(id),
+    FOREIGN KEY (id_sportif) REFERENCES sportif(id)
+);
+
