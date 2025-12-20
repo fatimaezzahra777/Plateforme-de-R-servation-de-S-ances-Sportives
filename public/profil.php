@@ -9,17 +9,82 @@ if (!isset($_SESSION['id_user']) || $_SESSION['role'] !== 'coach') {
 
 $id_user = $_SESSION['id_user'];
 
-
+/* ================= RÉCUPÉRER LE COACH ================= */
 $stmt = $conn->prepare("
     SELECT c.*, u.nom, u.email
     FROM coach c
     JOIN users u ON c.id_user = u.id_user
     WHERE c.id_user = ?
 ");
-
 $stmt->bind_param("i", $id_user);
 $stmt->execute();
 $coach = $stmt->get_result()->fetch_assoc();
+
+if (!$coach) {
+    die("Coach introuvable");
+}
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $date    = $_POST['jour'];
+    $heure_d = $_POST['heure_d'];
+    $heure_f = $_POST['heure_f'];
+
+    $stmt = $conn->prepare("
+        INSERT INTO disponibilite (id_coach, jour, heure_d, heure_f)
+        VALUES (?, ?, ?, ?)
+    ");
+    $stmt->bind_param("isss", $coach['id'], $date, $heure_d, $heure_f);
+    $stmt->execute();
+
+    header("Location: profil.php");
+    exit;
+}
+
+/* ================= SUPPRESSION DISPONIBILITÉ ================= */
+if (isset($_GET['delete_dispo'])) {
+    $id_dispo = intval($_GET['delete_dispo']);
+
+    $stmt = $conn->prepare("
+        DELETE FROM disponibilite
+        WHERE id = ? AND id_coach = ?
+    ");
+    $stmt->bind_param("ii", $id_dispo, $coach['id']);
+    $stmt->execute();
+
+    header("Location: profil.php");
+    exit;
+}
+
+
+$stmt = $conn->prepare("
+    SELECT * FROM disponibilite
+    WHERE id_coach = ?
+    ORDER BY jour, heure_d
+");
+$stmt->bind_param("i", $coach['id']);
+$stmt->execute();
+$dispos = $stmt->get_result();
+
+
+$stmt = $conn->prepare("
+    SELECT 
+        r.id_reserv,
+        r.date_r,
+        r.heure,
+        r.statut,
+        u.nom AS nom_sportif,
+        u.email
+    FROM reservation r
+    JOIN sportif s ON r.id_sportif = s.id
+    JOIN users u ON s.id_user = u.id_user
+    WHERE r.id_coach = ?
+    ORDER BY r.date_r DESC, r.heure DESC
+");
+$stmt->bind_param("i", $coach['id']);
+$stmt->execute();
+$reservations = $stmt->get_result();
+
 ?>
 
 <!DOCTYPE html>
@@ -70,16 +135,18 @@ $coach = $stmt->get_result()->fetch_assoc();
             </div>
         </div>
     </nav>
+<div class="mt-20 grid grid-cols-2">
 
-<h1 class="text-4xl font-bold text-emerald-400 mb-8">Mon Profil</h1>
 
 <div class="bg-white/10 p-8 rounded-xl max-w-3xl">
+    <h1 class="text-4xl font-bold text-emerald-400 mb-8">Mon Profil</h1>
 
     <div class="flex items-center space-x-6 mb-6">
         <?php
-            $photo = (!empty($coach['photo']))
-                ? "assets/".$coach['photo']
-                : "assets/images/profile.avif";
+            $photo = (!empty($coach['photo']) && file_exists("assets/images/".$coach['photo']))
+                    ? "assets/images/".$coach['photo']
+                    : "assets/images/profile.avif";
+
         ?>
 
        <img src="<?= $photo ?>" class="w-28 h-28 rounded-full object-cover">
@@ -100,6 +167,118 @@ $coach = $stmt->get_result()->fetch_assoc();
        Modifier Profil
     </a>
 </div>
+<div>
+
+<form method="POST" class="bg-white/10 p-6 rounded-xl w-96 mx-auto mt-10">
+    <h2 class="text-xl font-bold mb-4">Ajouter disponibilité</h2>
+
+    <input type="date" name="jour" required class="w-full mb-3 p-2 rounded text-black">
+    <input type="time" name="heure_d" required class="w-full mb-3 p-2 rounded text-black">
+    <input type="time" name="heure_f" required class="w-full mb-3 p-2 rounded text-black">
+
+    <button type="submit" class="bg-emerald-500 w-full py-2 rounded">Ajouter</button>
+</form>
+</div>
+
+
+</div>
+
+<!-- DISPONIBILITÉS -->
+<div class="bg-white/10 p-6 rounded-xl max-w-3xl mt-8">
+    <h2 class="text-xl font-bold mb-4 text-emerald-400">
+        Mes disponibilités
+    </h2>
+
+    <?php if ($dispos->num_rows > 0): ?>
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-white/20 text-white/70">
+                    <th class="py-2">Jour</th>
+                    <th>Début</th>
+                    <th>Fin</th>
+                    <th class="text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while($d = $dispos->fetch_assoc()): ?>
+                <tr class="border-b border-white/10">
+                    <td><?= $d['jour'] ?></td>
+                    <td><?= $d['heure_d'] ?></td>
+                    <td><?= $d['heure_f'] ?></td>
+                    <td class="text-center">
+                        <a href="?delete_dispo=<?= $d['id'] ?>"
+                           onclick="return confirm('Supprimer cette disponibilité ?')"
+                           class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm">
+                           Supprimer
+                        </a>
+                    </td>
+                </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    <?php else: ?>
+        <p class="text-white/70">
+            Aucune disponibilité ajoutée.
+        </p>
+    <?php endif; ?>
+</div>
+
+<div class="bg-white/10 p-6 rounded-xl max-w-4xl mt-10">
+    <h2 class="text-xl font-bold mb-4 text-emerald-400">
+        Réservations reçues
+    </h2>
+
+    <?php if ($reservations->num_rows > 0): ?>
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-white/20 text-white/70">
+                    <th>Sportif</th>
+                    <th>Date</th>
+                    <th>Heure</th>
+                    <th>Statut</th>
+                    <th class="text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($r = $reservations->fetch_assoc()): ?>
+                <tr class="border-b border-white/10">
+                    <td><?= htmlspecialchars($r['nom_sportif']) ?></td>
+                    <td><?= $r['date_r'] ?></td>
+                    <td><?= $r['heure'] ?></td>
+                    <td>
+                        <?php if ($r['statut'] === 'en_attente'): ?>
+                            <span class="text-yellow-400">En attente</span>
+                        <?php elseif ($r['statut'] === 'acceptee'): ?>
+                            <span class="text-green-400">Acceptée</span>
+                        <?php else: ?>
+                            <span class="text-red-400">Refusée</span>
+                        <?php endif; ?>
+                    </td>
+                    <td class="text-center space-x-2">
+                        <?php if ($r['statut'] === 'en_attente'): ?>
+                            <a href="reservation_action.php?id=<?= $r['id'] ?>&action=accept"
+                               class="bg-emerald-500 px-3 py-1 rounded text-sm">
+                               Accepter
+                            </a>
+                            <a href="reservation_action.php?id=<?= $r['id'] ?>&action=refuse"
+                               class="bg-red-500 px-3 py-1 rounded text-sm">
+                               Refuser
+                            </a>
+                        <?php else: ?>
+                            —
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    <?php else: ?>
+        <p class="text-white/70">Aucune réservation reçue.</p>
+    <?php endif; ?>
+</div>
+
+
+
 
 
 

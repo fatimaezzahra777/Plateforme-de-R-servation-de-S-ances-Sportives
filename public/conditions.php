@@ -33,8 +33,6 @@
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-8 font-medium">
                     <a href="index.php" class="hover:text-emerald-400 transition">Accueil</a>
-                    <a href="coach.php" class="hover:text-emerald-400 transition">Coachs</a>
-                    <a href="sportif.php" class="hover:text-emerald-400 transition">Sportifs</a>
                     <a href="login.php" class="text-emerald-400 font-bold">Connexion</a>
                 </div>
 
@@ -47,8 +45,6 @@
             <!-- Mobile Menu -->
             <div id="mobileMenu" class="hidden md:hidden pb-4 space-y-2">
                 <a href="index.php" class="block hover:text-emerald-400">Accueil</a>
-                <a href="coach.php" class="block hover:text-emerald-400">Coachs</a>
-                <a href="sportif.php" class="block hover:text-emerald-400">Sportifs</a>
                 <a href="login.php" class="block text-emerald-400 font-bold">Connexion</a>
             </div>
         </div>

@@ -20,6 +20,19 @@ if (isset($_POST['save'])) {
     $exper = $_POST['experience'];
     $certif = $_POST['certif'];
 
+    if (!empty($_FILES['photo']['name'])) {
+        $photo_name = time() . "_" . basename($_FILES['photo']['name']);
+        $target_dir = "assets/images/";
+        $target_file = $target_dir . $photo_name;
+
+        if (move_uploaded_file($_FILES['photo']['tmp_name'], $target_file)) {
+            $photo = $photo_name;
+        } else {
+            $photo = $coach['photo']; 
+        }
+    } else {
+        $photo = $coach['photo']; 
+    }
  
 
     $update = $conn->prepare("
@@ -52,11 +65,6 @@ if (isset($_POST['save'])) {
     <div>
         <label>Photo</label>
         <input type="file" name="photo">
-    </div>
-    <div>
-        <label>Nom</label>
-        <input type="text" name="nom" value="<?= $coach['nom'] ?>"
-               class="w-full p-3 bg-black/40 border border-white/20 rounded">
     </div>
 
     <div>

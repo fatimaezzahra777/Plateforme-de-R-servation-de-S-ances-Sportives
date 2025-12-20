@@ -53,20 +53,38 @@ $q_tomorrow->bind_param("i", $id_coach);
 $q_tomorrow->execute();
 $tomorrow = $q_tomorrow->get_result()->fetch_assoc()['total'];
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_reserv'], $_POST['action'])) {
+    $id_reserv = (int) $_POST['id_reserv'];
+    $action = $_POST['action'];
 
-$id_user = $_SESSION['id_user'];
+    if ($action === 'accepter') {
+        $stmt = $conn->prepare("UPDATE reservation SET statut='acceptée' WHERE id_reserv=?");
+        $stmt->bind_param("i", $id_reserv);
+        $stmt->execute();
+    } elseif ($action === 'annuler') {
+        $stmt = $conn->prepare("UPDATE reservation SET statut='refusée' WHERE id_reserv=?");
+        $stmt->bind_param("i", $id_reserv);
+        $stmt->execute();
+    }
 
-$q_coachs = $conn->prepare("
-    SELECT 
-        coach.id,
-        coach.photo,
-        coach.certif,
-        users.nom
-    FROM coach
-    INNER JOIN users ON coach.id_user = users.id_user
+    // Redirection pour éviter le re-post du formulaire
+    header("Location: ".$_SERVER['PHP_SELF']);
+    exit;
+}
+
+
+
+$stmt = $conn->prepare("
+    SELECT r.*, u.nom AS sportif_nom, s.niveau AS sportif_niveau
+    FROM reservation r
+    JOIN sportif s ON r.id_sportif = s.id_user
+    JOIN users u ON s.id_user = u.id_user
+    WHERE r.id_coach = ? AND r.statut = 'en_attente'
+    ORDER BY r.date_r, r.heure
 ");
-$q_coachs->execute();
-$coachs = $q_coachs->get_result();
+$stmt->bind_param("i", $id_coach);
+$stmt->execute();
+$reservations = $stmt->get_result();
 
 
 ?>
@@ -155,62 +173,43 @@ $coachs = $q_coachs->get_result();
             </div>
        </div>
 
-        <!-- How It Works -->
-        <div class="bg-balck py-16">
-            <div class="max-w-7xl mx-auto px-4">
-                <h2 class="text-4xl font-bold text-emerald-400 mb-12 text-center">Comment Ça Marche ?</h2>
-                <div class="grid md:grid-cols-3 gap-8">
-                    <div class="text-center">
-                        <div class="bg-white text-black w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
-                        <h3 class="text-xl font-bold mb-3">Choisissez Votre Coach</h3>
-                        <p class="text-gray-500">Parcourez les profils des coachs certifiés et trouvez celui qui correspond à vos objectifs</p>
-                    </div>
-                    <div class="text-center">
-                        <div class="bg-white text-black w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
-                        <h3 class="text-xl font-bold mb-3">Réservez une Séance</h3>
-                        <p class="text-gray-500">Sélectionnez un créneau disponible et confirmez votre réservation en quelques clics</p>
-                    </div>
-                    <div class="text-center">
-                        <div class="bg-white text-black w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
-                        <h3 class="text-xl font-bold mb-3">Atteignez Vos Objectifs</h3>
-                        <p class="text-gray-500">Profitez d'un accompagnement personnalisé pour progresser rapidement</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+         <div>
+             <h2 class="text-2xl font-bold mb-4">Réservations en attente</h2>
+            <?php if($reservations->num_rows > 0): ?>
+                <table class="w-full text-left border">
+                    <tr class="border-b">
+                        <th>Sportif</th>
+                        <th>Date</th>
+                        <th>Heure</th>
+                        <th>Action</th>
+                    </tr>
+                    <?php while($r = $reservations->fetch_assoc()): ?>
+                    <tr class="border-b">
+                        <td><?= $r['sportif_nom'] ?> <?= $r['sportif_prenom'] ?></td>
+                        <td><?= $r['date_r'] ?></td>
+                        <td><?= $r['heure'] ?></td>
+                        <td class="space-x-2">
+                            <form method="POST" class="inline">
+                                <input type="hidden" name="id_reserv" value="<?= $r['id_reserv'] ?>">
+                                <input type="hidden" name="action" value="accepter">
+                                <button type="submit" class="bg-emerald-500 px-3 py-1 rounded">Accepter</button>
+                            </form>
+                            <form method="POST" class="inline">
+                                <input type="hidden" name="id_reserv" value="<?= $r['id_reserv'] ?>">
+                                <input type="hidden" name="action" value="annuler">
+                                <button type="submit" class="bg-red-500 px-3 py-1 rounded">Annuler</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <?php endwhile; ?>
+                </table>
+            <?php else: ?>
+                <p>Aucune réservation en attente</p>
+            <?php endif; ?>
+         </div>
+       
 
- <div class="grid md:grid-cols-3 gap-8 px-32 mb-20">
-
-<?php if ($coachs->num_rows > 0): ?>
-    <?php while ($row = $coachs->fetch_assoc()): ?>
-        
-        <div class="bg-white/10 p-6 rounded-xl border border-white/20">
-            <?php
-            $photo = (!empty($coach['photo']))
-                ? "assets/".$coach['photo']
-                : "assets/images/profile.avif";
-            ?>
-            <img src="<?= $photo ?>" class="w-28 h-28 rounded-full object-cover">
-            <h2 class="text-xl font-bold">
-                <?= $row['nom'] ?>
-            </h2>
-
-            <p class="text-emerald-400">
-                <?= $row['certif'] ?>
-            </p>
-
-            <a href="detail_c.php?id=<?= $coach['id'] ?>" class="block text-center mt-4 bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-lg transition"> 
-                Voir Profil 
-            </a>
-        </div>
-
-    <?php endwhile; ?>
-<?php else: ?>
-    <p class="text-center text-gray-300">
-        Aucun coach trouvé
-    </p>
-<?php endif; ?>
+       
 
 </div>
 

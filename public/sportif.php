@@ -78,6 +78,7 @@ $sportif = $stmt->get_result()->fetch_assoc();
             <div class="hidden md:flex items-center space-x-8">
                 <a href="index.php" class="hover:text-emerald-400">Accueil</a>
                 <a href="sportif.php" class="text-emerald-400 font-bold">Sportif</a>
+                <a href="ListeC.php" class="hover:text-red-400">Coachs</a>
                 <a href="logout.php" class="hover:text-red-400">Deconnexion</a>
             </div>
         </div>
@@ -137,7 +138,7 @@ $sportif = $stmt->get_result()->fetch_assoc();
                     <p class="mb-4 opacity-90">
                         Trouvez le coach idéal pour vos objectifs
                     </p>
-                    <a href="coach.php">
+                    <a href="ListeC.php">
                         <button class="w-full bg-white/90 text-black py-3 rounded-full
                                        font-semibold hover:bg-white transition">
                             Découvrir les Coachs
@@ -166,6 +167,30 @@ $sportif = $stmt->get_result()->fetch_assoc();
                     Modifier Profil
                     </a>
                 </div>
+
+                 <div class="bg-balck py-16">
+            <div class="max-w-7xl mx-auto px-4">
+                <h2 class="text-4xl font-bold text-emerald-400 mb-12 text-center">Comment Ça Marche ?</h2>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div class="bg-white text-black w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
+                        <h3 class="text-xl font-bold mb-3">Choisissez Votre Coach</h3>
+                        <p class="text-gray-500">Parcourez les profils des coachs certifiés et trouvez celui qui correspond à vos objectifs</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-white text-black w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
+                        <h3 class="text-xl font-bold mb-3">Réservez une Séance</h3>
+                        <p class="text-gray-500">Sélectionnez un créneau disponible et confirmez votre réservation en quelques clics</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-white text-black w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
+                        <h3 class="text-xl font-bold mb-3">Atteignez Vos Objectifs</h3>
+                        <p class="text-gray-500">Profitez d'un accompagnement personnalisé pour progresser rapidement</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
             </div>
         </div>

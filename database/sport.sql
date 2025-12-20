@@ -47,3 +47,14 @@ CREATE TABLE reservation (
     FOREIGN KEY (id_sportif) REFERENCES sportif(id)
 );
 
+
+--create table disponibilite
+CREATE TABLE disponibilite(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_coach INT NOT NULL,
+    jour  DATE,
+    heure_d TIME(0),
+    heure_f TIME(0),
+    FOREIGN KEY (id_coach) REFERENCES coach(id)
+);
+
