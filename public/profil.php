@@ -9,7 +9,7 @@ if (!isset($_SESSION['id_user']) || $_SESSION['role'] !== 'coach') {
 
 $id_user = $_SESSION['id_user'];
 
-/* ================= RÉCUPÉRER LE COACH ================= */
+
 $stmt = $conn->prepare("
     SELECT c.*, u.nom, u.email
     FROM coach c
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-/* ================= SUPPRESSION DISPONIBILITÉ ================= */
+
 if (isset($_GET['delete_dispo'])) {
     $id_dispo = intval($_GET['delete_dispo']);
 
@@ -84,6 +84,7 @@ $stmt = $conn->prepare("
 $stmt->bind_param("i", $coach['id']);
 $stmt->execute();
 $reservations = $stmt->get_result();
+
 
 ?>
 
@@ -131,7 +132,7 @@ $reservations = $stmt->get_result();
             <div id="mobileMenu" class="hidden md:hidden pb-4 space-y-2">
                 <a href="profil.php" class="block text-emerald-400 font-bold">Profile</a>
                 <a href="coach.php" class="block hover:text-emerald-400">Dashboard</a>
-                <a href="login.php" class="block hover:text-emerald-400">Deconnexion</a>
+                <a href="logout.php" class="block hover:text-emerald-400">Deconnexion</a>
             </div>
         </div>
     </nav>
@@ -183,7 +184,6 @@ $reservations = $stmt->get_result();
 
 </div>
 
-<!-- DISPONIBILITÉS -->
 <div class="bg-white/10 p-6 rounded-xl max-w-3xl mt-8">
     <h2 class="text-xl font-bold mb-4 text-emerald-400">
         Mes disponibilités
@@ -248,7 +248,7 @@ $reservations = $stmt->get_result();
                     <td>
                         <?php if ($r['statut'] === 'en_attente'): ?>
                             <span class="text-yellow-400">En attente</span>
-                        <?php elseif ($r['statut'] === 'acceptee'): ?>
+                        <?php elseif ($r['statut'] === 'acceptée'): ?>
                             <span class="text-green-400">Acceptée</span>
                         <?php else: ?>
                             <span class="text-red-400">Refusée</span>
@@ -256,11 +256,11 @@ $reservations = $stmt->get_result();
                     </td>
                     <td class="text-center space-x-2">
                         <?php if ($r['statut'] === 'en_attente'): ?>
-                            <a href="reservation_action.php?id=<?= $r['id'] ?>&action=accept"
+                            <a href="reserv_button.php?id=<?= $r['id_reserv'] ?>&action=accept"
                                class="bg-emerald-500 px-3 py-1 rounded text-sm">
                                Accepter
                             </a>
-                            <a href="reservation_action.php?id=<?= $r['id'] ?>&action=refuse"
+                            <a href="reserv_button.php?id=<?= $r['id_reserv'] ?>&action=refuse"
                                class="bg-red-500 px-3 py-1 rounded text-sm">
                                Refuser
                             </a>

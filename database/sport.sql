@@ -42,7 +42,7 @@ CREATE TABLE reservation (
     id_sportif INT,
     date_r DATE,
     heure TIME,
-    statut ENUM('acceptée','refusée'),
+    statut ENUM('acceptée','en_attente','refusée'),
     FOREIGN KEY (id_coach) REFERENCES coach(id),
     FOREIGN KEY (id_sportif) REFERENCES sportif(id)
 );

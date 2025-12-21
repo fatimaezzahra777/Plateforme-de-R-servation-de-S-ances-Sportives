@@ -138,7 +138,7 @@ $reservations = $stmt->get_result();
             <div id="mobileMenu" class="hidden md:hidden pb-4 space-y-2">
                 <a href="profil.php" class="block hover:text-emerald-400">Profile</a>
                 <a href="coach.php" class="block text-emerald-400 font-bold">Dashboard</a>
-                <a href="login.php" class="block hover:text-emerald-400">Deconnexion</a>
+                <a href="logout.php" class="block hover:text-emerald-400">Deconnexion</a>
             </div>
         </div>
     </nav>
@@ -172,41 +172,6 @@ $reservations = $stmt->get_result();
                 <?php endif; ?>
             </div>
        </div>
-
-         <div>
-             <h2 class="text-2xl font-bold mb-4">Réservations en attente</h2>
-            <?php if($reservations->num_rows > 0): ?>
-                <table class="w-full text-left border">
-                    <tr class="border-b">
-                        <th>Sportif</th>
-                        <th>Date</th>
-                        <th>Heure</th>
-                        <th>Action</th>
-                    </tr>
-                    <?php while($r = $reservations->fetch_assoc()): ?>
-                    <tr class="border-b">
-                        <td><?= $r['sportif_nom'] ?> <?= $r['sportif_prenom'] ?></td>
-                        <td><?= $r['date_r'] ?></td>
-                        <td><?= $r['heure'] ?></td>
-                        <td class="space-x-2">
-                            <form method="POST" class="inline">
-                                <input type="hidden" name="id_reserv" value="<?= $r['id_reserv'] ?>">
-                                <input type="hidden" name="action" value="accepter">
-                                <button type="submit" class="bg-emerald-500 px-3 py-1 rounded">Accepter</button>
-                            </form>
-                            <form method="POST" class="inline">
-                                <input type="hidden" name="id_reserv" value="<?= $r['id_reserv'] ?>">
-                                <input type="hidden" name="action" value="annuler">
-                                <button type="submit" class="bg-red-500 px-3 py-1 rounded">Annuler</button>
-                            </form>
-                        </td>
-                    </tr>
-                    <?php endwhile; ?>
-                </table>
-            <?php else: ?>
-                <p>Aucune réservation en attente</p>
-            <?php endif; ?>
-         </div>
        
 
        
